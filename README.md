@@ -31,6 +31,48 @@ go build
 go run .
 ```
 
+## Docker
+
+Run without installing Go locally using Docker or Docker Compose.
+
+### Build the image
+
+```bash
+docker build -t itadakimasu-dl:local .
+```
+
+### Run with Docker (URL mode, all episodes)
+
+```bash
+mkdir -p downloads
+docker run --rm -it \
+  -v %cd%/downloads:/downloads \
+  -v %cd%/config.json:/app/config.json:ro \
+  itadakimasu-dl:local \
+  url "https://www3.animeflv.net/anime/one-piece" --episodes 0 --output "/downloads/One Piece/Season 1"
+```
+
+On PowerShell, `%cd%` expands to your current directory; adjust paths if needed.
+
+### Run with Docker Compose
+
+Edit `docker-compose.yml` and uncomment the `command` you want to use, or pass it inline:
+
+```bash
+docker compose run --rm itadakimasu url "https://www3.animeflv.net/anime/bleach" --episodes 1-5,7,9-12 --output "/downloads/Bleach/Arc 1"
+```
+
+To use interactive search:
+
+```bash
+docker compose run --rm itadakimasu search "naruto" --episodes 1-3 --output "/downloads/Naruto/Season 1"
+```
+
+Notes:
+- If your `animePath` contains `[ASK]`, always pass `--output` to avoid prompts inside the container.
+- Downloads are written under `/downloads` in the container; by default this maps to `./downloads` on your host.
+- The image includes `config.json` at `/app/config.json`; you can override it by mounting your local file as shown.
+
 ## Usage
 
 ### Searching and Downloading Anime

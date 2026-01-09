@@ -1,0 +1,26 @@
+# VCS
+.git
+.gitignore
+
+# IDE/editor
+.vscode/
+.idea/
+
+# OS junk
+*.DS_Store
+
+# Build artifacts
+bin/
+build/
+dist/
+
+# Caches
+**/.cache/
+
+# Local downloads (mounted as a volume)
+downloads/
+
+# Node/npm (not used, but common)
+node_modules/
+
+# Docker files themselves are fine to include for build context
