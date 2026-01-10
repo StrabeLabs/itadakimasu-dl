@@ -5,6 +5,7 @@ import (
 	"itadakimasu-dl/interfaces"
 	"itadakimasu-dl/network"
 	"math/rand/v2"
+	"net/url"
 	"regexp"
 	"strings"
 	"time"
@@ -55,10 +56,29 @@ func (s *stape) GetUrl() string {
 	return s.Url
 }
 
-func NewStapeLink(url string, name string, conf *config.Link) interfaces.ILink {
-	id := strings.ReplaceAll(strings.Split(url, "/v/")[1], "/", "")
+func extractStreamtapeID(raw string) string {
+	u, err := url.Parse(raw)
+	if err != nil {
+		return ""
+	}
+	p := strings.Trim(u.Path, "/")
+	parts := strings.Split(p, "/")
+	if len(parts) >= 2 && (parts[0] == "v" || parts[0] == "e") {
+		return parts[1]
+	}
+	if len(parts) >= 1 && parts[0] != "" && parts[0] != "v" && parts[0] != "e" {
+		return parts[0]
+	}
+	if id := u.Query().Get("id"); id != "" {
+		return id
+	}
+	return ""
+}
+
+func NewStapeLink(rawURL string, name string, conf *config.Link) interfaces.ILink {
+	id := extractStreamtapeID(rawURL)
 	return &stape{
-		Url:  url,
+		Url:  rawURL,
 		Id:   id,
 		Name: name,
 		Conf: conf,

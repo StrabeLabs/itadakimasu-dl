@@ -1,0 +1,24 @@
+services:
+  itadakimasu:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BUILDER: build_nobk
+      cache_from:
+        - itadakimasu-dl:local
+    image: itadakimasu-dl:local
+    working_dir: /app
+    entrypoint: ["/app/itadakimasu-dl"]
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./downloads:/downloads
+      - ./config.json:/app/config.json:ro
+    command: ["url", "https://www3.animeflv.net/anime/zero-no-tsukaima", "--episodes", "0", "--output", "/downloads/Zero no Tsukaima/Season 1"]
+    # Example non-interactive usage (URL mode, all episodes):
+    # command: ["url", "https://www3.animeflv.net/anime/one-piece", "--episodes", "0", "--output", "/downloads/One Piece/Season 1"]
+    # Example selective episodes:
+    # command: ["url", "https://www3.animeflv.net/anime/bleach", "--episodes", "1-5,7,9-12", "--output", "/downloads/Bleach/Arc 1"]
+    # Example interactive search (will still require --output to avoid [ASK] in config):
+    # command: ["search", "naruto", "--episodes", "1-3", "--output", "/downloads/Naruto/Season 1"]
