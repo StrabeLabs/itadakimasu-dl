@@ -3,11 +3,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        BUILDER: build_nobk
-      cache_from:
-        - itadakimasu-dl:local
-    image: itadakimasu-dl:local
     working_dir: /app
     entrypoint: ["/app/itadakimasu-dl"]
     tty: true
